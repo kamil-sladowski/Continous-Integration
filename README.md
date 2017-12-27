@@ -28,7 +28,7 @@ By obserwować inne repozytorium pod kątem nowych zmian należy w pliku CI.py p
 	
 
 
-# Szczególowa dokumentacja poszczególnych funkcji znajduje się w plikach .html:
+# Szczególowa dokumentacja poszczególnych funkcji znajduje się w plikach .html (Należy pobrać repozytorium by móc je otwierać):
 CI.html,
 github.html,
 report_manager.html,
