@@ -1,0 +1,64 @@
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            font-family: "Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
+            font-weight: 400;
+        }
+
+        tr:nth-child(even){
+        	background-color: #f2f2f2;
+            font-family: "Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
+            font-weight: 400;
+        }
+
+        th {
+            background-color: #124191;
+            color: white;
+            font-family: "Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
+            font-weight: 400;
+        }
+    </style>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>RESULT</th>
+        <th>PREVIIOUS RESULT</th>
+        <th>EFFECTIVENESS</th>
+        <th>CURRENT TIME</th>
+        <th>AVERAGE TIME</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for e in tests %}
+      <tr>
+        <td>{{ e.id }}</td>
+        <td>{{ e.current_result }}</td>
+        <td>{{ e.previous_result }}</td>
+        <td>{{ e.effectiveness }}</td>
+        <td>{{ e.current_time }}</td>
+        <td>{{ e.time_average }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>----------------------</td>
+        <td>----------------------</td>
+        <td>----------------------</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Passed tests: </td>
+        <td>{{ passed_tests_num }}</td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+
