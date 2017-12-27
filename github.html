@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module github</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>github</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/Kamil/python_workspace/continous%20integration/github.py">/home/Kamil/python_workspace/continous integration/github.py</a></font></td></tr></table>
+    <p><tt>Skrypt&nbsp;zwiera&nbsp;wszystkie&nbsp;funkcje&nbsp;potrzebne&nbsp;do&nbsp;pobrania&nbsp;danych&nbsp;z&nbsp;danego&nbsp;&lt;REPOZYTORIUM&gt;,&nbsp;urzytkownika&nbsp;&lt;USER&gt;&nbsp;z&nbsp;github.com<br>
+&nbsp;<br>
+W&nbsp;celu&nbsp;autoryzacji&nbsp;wymagane&nbsp;jest&nbsp;wczesniejsze&nbsp;wygenerowanie&nbsp;tokena&nbsp;w&nbsp;github.com,<br>
+by&nbsp;moc&nbsp;zdalnie&nbsp;logowac&nbsp;sie&nbsp;do&nbsp;repozytorium.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="requests.html">requests</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-create_github_session"><strong>create_github_session</strong></a>(token)</dt><dd><tt>Funkcja&nbsp;generuje&nbsp;zapytanie&nbsp;do&nbsp;strony&nbsp;github.com,&nbsp;do&nbsp;określonego&nbsp;&lt;REPOZYTORIUM&gt;,&nbsp;&lt;USER&gt;&nbsp;użytkownika.<br>
+&nbsp;<br>
+:param&nbsp;token:<br>
+:raises&nbsp;GitConnectionError<br>
+:return&nbsp;objekt&nbsp;nawiazanej&nbsp;sesji:</tt></dd></dl>
+ <dl><dt><a name="-format_date"><strong>format_date</strong></a>(commit_date)</dt><dd><tt>Formatuje&nbsp;dane&nbsp;do&nbsp;formy&nbsp;y-m-dTh:m:sZ<br>
+&nbsp;<br>
+:param&nbsp;commit_date:&nbsp;Niesformatowana&nbsp;data&nbsp;commitu<br>
+:return:&nbsp;Data&nbsp;po&nbsp;sformatowaniu</tt></dd></dl>
+ <dl><dt><a name="-get_all_commit_dates"><strong>get_all_commit_dates</strong></a>(session, username, repository, token)</dt><dd><tt>Na&nbsp;otrzymanym&nbsp;obiekcie&nbsp;session&nbsp;wywoluje&nbsp;zapytanie&nbsp;typu&nbsp;GET.<br>
+&nbsp;<br>
+W&nbsp;odpowiedzi&nbsp;uzyskuje&nbsp;dane&nbsp;w&nbsp;formacie&nbsp;JSON,&nbsp;o&nbsp;przykładowej&nbsp;zawartości:<br>
+&nbsp;<br>
+{'sha':&nbsp;'4ea3d3260d921dac85c8b4f3dc31c198e684bb33',&nbsp;<br>
+'commit':&nbsp;{'author':&nbsp;{'name':&nbsp;'kamilo116',&nbsp;'email':&nbsp;'kamil.sladowski@gmail.com',&nbsp;'date':&nbsp;'2017-12-02T22:08:52Z'},<br>
+'committer':&nbsp;{'name':&nbsp;'kamilo116',&nbsp;'email':&nbsp;'kamil.sladowski@gmail.com',&nbsp;'date':&nbsp;'2017-12-02T22:08:52Z'},&nbsp;'message':&nbsp;'created&nbsp;readme',<br>
+'tree':&nbsp;{'sha':&nbsp;'a555d0f851d5f531d3769094abcf3f7aa3661728',&nbsp;'url':&nbsp;'https://api.github.com/repos/kamilo116/tmp-repo/git/trees/a555d0f851d5f531d3769094abcf3f7aa3661728'},<br>
+'url':&nbsp;'https://api.github.com/repos/kamilo116/tmp-repo/git/commits/4ea3d3260d921dac85c8b4f3dc31c198e684bb33',&nbsp;'comment_count':&nbsp;0,<br>
+'verification':&nbsp;{'verified':&nbsp;False,&nbsp;'reason':&nbsp;'unsigned',&nbsp;'signature':&nbsp;None,&nbsp;'payload':&nbsp;None}},<br>
+&nbsp;<br>
+'url':&nbsp;'https://api.github.com/repos/kamilo116/tmp-repo/commits/4ea3d3260d921dac85c8b4f3dc31c198e684bb33',<br>
+'html_url':&nbsp;'https://github.com/kamilo116/tmp-repo/commit/4ea3d3260d921dac85c8b4f3dc31c198e684bb33',<br>
+'comments_url':&nbsp;'https://api.github.com/repos/kamilo116/tmp-repo/commits/4ea3d3260d921dac85c8b4f3dc31c198e684bb33/comments',<br>
+'author':&nbsp;{'login':&nbsp;'kamilo116',&nbsp;'id':&nbsp;8524812,&nbsp;&nbsp;...}<br>
+&nbsp;<br>
+Z&nbsp;każdegu&nbsp;uzyskanego&nbsp;w&nbsp;ten&nbsp;sposób&nbsp;commitu&nbsp;potrzeba&nbsp;wyciągnąć&nbsp;datę,&nbsp;przez&nbsp;odwołanie&nbsp;do:<br>
+[commit']['author']['date']<br>
+&nbsp;<br>
+&nbsp;<br>
+:param&nbsp;session:&nbsp;Sesja&nbsp;nawiazana&nbsp;z&nbsp;repozytorium&nbsp;githabowym&nbsp;danego&nbsp;uzytkownika<br>
+:param&nbsp;username:&nbsp;Nazwa&nbsp;uzytkownika,&nbsp;do&nbsp;ktorego&nbsp;nalezy&nbsp;dane&nbsp;repozytorium<br>
+:param&nbsp;token:&nbsp;Token&nbsp;uwierzytelniajacy<br>
+:return:&nbsp;Lista&nbsp;z&nbsp;datami&nbsp;wszystkich&nbsp;commitow&nbsp;danego&nbsp;repozytorium</tt></dd></dl>
+ <dl><dt><a name="-is_newer_commit"><strong>is_newer_commit</strong></a>(all_commit_dates) -&gt; bool</dt><dd><tt>Wybiera&nbsp;z&nbsp;listy&nbsp;commitow&nbsp;daty&nbsp;(all_commit_dates),&nbsp;ktore&nbsp;sa&nbsp;wieksze&nbsp;od&nbsp;tej&nbsp;zapisanej&nbsp;w&nbsp;HISTORY_FILE.<br>
+Jezeli&nbsp;znajdzie&nbsp;takie&nbsp;daty,&nbsp;to&nbsp;funkcja&nbsp;zwraca&nbsp;True.<br>
+&nbsp;<br>
+:param&nbsp;all_commit_dates:&nbsp;Daty&nbsp;wszystkich&nbsp;commitow.<br>
+:return:&nbsp;Informacja&nbsp;o&nbsp;wystapieniu&nbsp;nowych&nbsp;commitow.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['format_date', 'create_github_session', 'get_all_commit_dates', 'is_newer_commit']</td></tr></table>
+</body></html>

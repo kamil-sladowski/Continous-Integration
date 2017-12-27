@@ -43,7 +43,7 @@ def create_github_session(token):
         raise GitConnectionError
 
 
-def get_all_commit_dates(session, username, token):
+def get_all_commit_dates(session, username,repository, token):
     """
     Na otrzymanym obiekcie session wywoluje zapytanie typu GET.
 
@@ -70,7 +70,7 @@ def get_all_commit_dates(session, username, token):
     :param token: Token uwierzytelniajacy
     :return: Lista z datami wszystkich commitow danego repozytorium
     """
-    commits = session.get('https://api.github.com/repos/' + username + '/tmp-repo/commits',
+    commits = session.get('https://api.github.com/repos/' + username + '/'+repository+'/commits',
                           headers={"Authorization": "token " + token})
     all_commit_dates = []
     commits_json_data = json.loads(commits.text)
@@ -81,7 +81,7 @@ def get_all_commit_dates(session, username, token):
 
 def is_newer_commit(all_commit_dates) -> bool:
     """
-    Wybiera z listy commitow (all_commit_dates) daty, ktore sa wieksze od tej zapisanej w HISTORY_FILE.
+    Wybiera z listy commitow daty (all_commit_dates), ktore sa wieksze od tej zapisanej w HISTORY_FILE.
     Jezeli znajdzie takie daty, to funkcja zwraca True.
 
     :param all_commit_dates: Daty wszystkich commitow.
