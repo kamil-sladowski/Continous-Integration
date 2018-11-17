@@ -1,41 +1,26 @@
-"""
-CI_manager.py:
 
-Program symuluje działanie Continous Integration.
-Zarządza pulą testów, które uruchomi, gdy wykryje nowa zmiane w <REPOZYTORIUM> gitowym.
-By wygenerowac raport o wszystkich pulach testow nalezy uruchomic skrypt 'report_manager.py'
-
-Wymagane narzędzia:
--Python3
-
--Flask
-	instalacja:
-	pip3 install Flask, requests
-
-
-
-"""
 from time import sleep
 from subprocess import Popen, check_output
 from github import *
 from tests_suite_manager import *
 
-GITHUB_TOKEN = "72faa47f2280b202f8b2b2b7169369b2857138a9"
+GITHUB_TOKEN = "3adc83a410980934edab146140778690927ad762"
 USERNAME = "Project-temporary-user"
 REPOSITORY_NAME = 'watching-repository'
 
 if __name__ == '__main__':
     tests_to_launch = [1, 4, 6, 7, 10, 22, 32, 33, 51]
-
+    spammer_file = 'commits_spammer.sh'
     token = GITHUB_TOKEN
     username = USERNAME
     controlled_repository = REPOSITORY_NAME
-    commit_number = 2
+    commit_number = '2'
 
     time_to_wait_for_commits = 30
     delay = 5
 
-    spammer = Popen(['commits_spammer.sh', token, username, controlled_repository, commit_number])
+    spammer = Popen([spammer_file, token, username, controlled_repository, commit_number], shell = True,
+              stdin = None, stdout = None, stderr = None, close_fds = True)
     print("INFO: Started commits generator")
 
     print("INFO: Creating github session...")
