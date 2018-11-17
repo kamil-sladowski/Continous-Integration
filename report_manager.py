@@ -24,9 +24,7 @@ Wymagane narzędzia:
     pip3 install Flask
 
 """
-__all__ = ['ProcessedReport','get_current_dir', 'collect_report_files','get_report_details','passed_tests_num','process_reports_data','index','main','report']
 
-import os
 from flask import Flask, redirect, render_template
 from socket import *
 from tests_suite_manager import TestResult
@@ -34,7 +32,7 @@ from tests_suite_manager import TestResult
 HOST = '127.0.0.1'
 PORT = 5000
 
-ROOT_TESTS_DIR = 'all_tests'
+ROOT_TESTS_DIR = os.path.join("Continous-Integration", 'all_tests')
 SUITE_TESTS_DIR_PREFIX = 'tests_suite'
 REPORT_HEADER = 'TEST'
 
@@ -48,11 +46,17 @@ class ProcessedReport:
     Zawiera wszystkie staystyki wszystkich prob danego testu
     """
     def __init__(self, id, passes, times):
+        passed_num = passes.count('True')
         self.id = str(id)
         self.current_result = passes[-1]
-        self.effectiveness = round(passes.count('True') / len(passes), 3)
         self.current_time = times[-1]
-        self.time_average = sum(times) // passes.count('True')
+
+        try:
+            self.effectiveness = round(passed_num / len(passes), 3)
+            self.time_average = sum(times) // passed_num
+        except ZeroDivisionError:
+            self.effectiveness = 0
+            self.time_average = -1
         try:
             self.previous_result = passes[-2]
         except IndexError:
@@ -82,7 +86,6 @@ def collect_report_files(curr_dir: str) -> list:
     :param curr_dir: Bierzacy katalog
     :return: Lista plikow tekstowych
     """
-
 
     report_files = []
     for root, dirs, files in os.walk(curr_dir):
@@ -155,20 +158,6 @@ def process_reports_data(report_details: list) -> list:
 def index():
     """ otworzenie strony startowej html.
     W tym projekcie nastepje automatyczne przekierowanie na podstrone /report/"""
-
-    return redirect('{0}:{1}/report'.format(HOST, PORT))
-
-
-@app.route('/main')
-def main():
-    """renderowanie strony main.html w przegladarce"""
-
-    return render_template('main.html')
-
-
-@app.route('/report')
-def report():
-    """ Na podstawie danych o wszystkich pulach testow generuje raport w html. """
     curr_dir = get_current_dir()
     report_files = collect_report_files(curr_dir)
     report_details = sorted(get_report_details(report_files), key=lambda obj: int(obj.id))

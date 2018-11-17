@@ -16,7 +16,6 @@ Struktura katalogow:
 
 """
 
-__all__= ['TestResult','get_current_date', 'update_report_file', 'launch_single_test', 'launch_tests', 'create_dir','create_suite_tests_dir','create_single_test_dir','create_single_test_log_file']
 
 import os
 import os.path
@@ -51,7 +50,7 @@ def get_current_date():
     current_date = time.strftime("%D_%H_%M")
     return current_date.replace('/', '_')
 
-def create_dir(diname, name):
+def create_dir(dirname, name):
     """
     Tworzy katalog 'name ' w danym 'dirname'
 
@@ -59,8 +58,9 @@ def create_dir(diname, name):
     :param name:
     :return new_dir:
     """
-
-    new_dir = os.path.join(diname, name)
+    print("dirname " + dirname)
+    print("name " + name)
+    new_dir = os.path.join(dirname, name)
     try:
         os.stat(new_dir)
     except FileNotFoundError:
@@ -145,7 +145,8 @@ def launch_tests(tests_to_launch):
 
     current_date = get_current_date()
     curr_dir = os.path.dirname(os.getcwd())
-    all_tests = os.path.join(curr_dir, ROOT_TESTS_DIR)
+    curr_dir = os.path.join(curr_dir, "Continous-Integration")
+    all_tests = os.path.join(curr_dir, ROOT_TESTS_DIR) # curr_dir - powinno sie uruchamiac z ContinousIntegration
     suite_test_dir = create_suite_tests_dir(all_tests, current_date)
     print("INFO: Log files available in: ", suite_test_dir)
     file_name = create_single_test_log_file(suite_test_dir, current_date)

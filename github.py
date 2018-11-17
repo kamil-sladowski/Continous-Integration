@@ -1,11 +1,10 @@
 """
-Skrypt zwiera wszystkie funkcje potrzebne do pobrania danych z danego <REPOZYTORIUM>, urzytkownika <USER> z github.com
+Skrypt zwiera wszystkie funkcje potrzebne do pobrania danych z danego <REPOZYTORIUM>, uzytkownika <USER> z github.com
 
 W celu autoryzacji wymagane jest wczesniejsze wygenerowanie tokena w github.com,
 by moc zdalnie logowac sie do repozytorium.
 """
 
-__all__ = ['format_date', 'create_github_session', 'get_all_commit_dates', 'is_newer_commit']
 import requests
 import json
 import re
@@ -43,7 +42,7 @@ def create_github_session(token):
         raise GitConnectionError
 
 
-def get_all_commit_dates(session, username,repository, token):
+def get_get_dates_of_all_commits_from_github(session, username, repository, token):
     """
     Na otrzymanym obiekcie session wywoluje zapytanie typu GET.
 
@@ -98,5 +97,6 @@ def is_newer_commit(all_commit_dates) -> bool:
                 f.write(last_commit_date + '\n')
             return True
         except IndexError:
-            print("WARNING: There hasn't been any commits since ", last_commit_date)
+            print("There hasn't been any commits since ", last_commit_date)
+            # print("WARNING: There hasn't been any commits since ", last_commit_date)
         return False
