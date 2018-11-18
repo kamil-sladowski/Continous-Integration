@@ -16,7 +16,6 @@ Struktura katalogow:
 
 """
 
-
 import os
 import os.path
 import time
@@ -24,6 +23,7 @@ from random import randint, choice
 
 SUITE_TESTS_DIR_PREFIX = 'tests_suite'
 ROOT_TESTS_DIR = 'all_tests'
+
 
 class TestResult:
 
@@ -44,14 +44,11 @@ class TestResult:
 
 
 def get_current_date():
-
     current_date = time.strftime("%D_%H_%M")
     return current_date.replace('/', '_')
 
-def create_dir(dirname, name):
 
-    print("dirname " + dirname)
-    print("name " + name)
+def create_dir(dirname, name):
     new_dir = os.path.join(dirname, name)
     try:
         os.stat(new_dir)
@@ -59,42 +56,42 @@ def create_dir(dirname, name):
         os.mkdir(new_dir)
     return new_dir
 
-def create_suite_tests_dir(dirname, date):
 
+def create_suite_tests_dir(dirname, date):
     name = SUITE_TESTS_DIR_PREFIX + "__" + date
     return create_dir(dirname, name)
 
-def create_single_test_dir(dirname, id, name):
 
+def create_single_test_dir(dirname, id, name):
     name = 'test_' + id + '_runned_at_' + name
     return create_dir(dirname, name)
 
-def create_single_test_log_file(dirname, date):
 
+def create_single_test_log_file(dirname, date):
     new_file_name = os.path.join(dirname, str('test_' + date + '.txt'))
     with open(new_file_name, 'w') as f:
         f.writelines("TEST PASSED TIME DIR\n")
     return new_file_name
 
-def update_report_file(file_name, test_result):
 
+def update_report_file(file_name, test_result):
     with open(file_name, 'a') as f:
         s2 = test_result + '\n'
         f.writelines(s2)
 
-def launch_single_test(id):
 
-    print("Info: Running test: " + id)
+def launch_single_test(id):
+    print("Info: Started test: " + id)
     dir = '//'
     time_spend = 0
     is_passed = choice([True, False])
     if is_passed:
         time_spend = randint(1, 1000)
-    print("Info: Result "+ id + ": " + str(is_passed))
+    print("Info: Test " + id + " - result: " + str(is_passed))
     return TestResult(id, str(is_passed), time_spend, dir)
 
-def launch_tests(tests_to_launch):
 
+def launch_tests(tests_to_launch):
     current_date = get_current_date()
     curr_dir = os.path.dirname(os.getcwd())
     curr_dir = os.path.join(curr_dir, "Continous-Integration")
@@ -108,4 +105,3 @@ def launch_tests(tests_to_launch):
         test_result = launch_single_test(id)
         test_result.log_file_dir = single_test_dir
         update_report_file(file_name, test_result)
-

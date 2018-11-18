@@ -1,4 +1,3 @@
-
 """
 This project is a simulator, which trigger launching tests, when detects new changes on github repository.
 After that, it takes results from those and previous 5 last runned test suites and generates report in html.
@@ -8,19 +7,18 @@ Every suite of tests generates on the end the .txt files with summary with singl
 changes and, collect final report and present in a readable way).
 """
 
-
 from time import sleep
-from subprocess import Popen, check_output
+from subprocess import Popen, check_output, PIPE, STDOUT, DEVNULL, CalledProcessError
 from github import *
 from tests_suite_manager import *
 
-GITHUB_TOKEN = "72484bd0f0e68842e29925015e6aa031ca3dbdb6"
+GITHUB_TOKEN = "2100b65daef23d45f719550b653c1c067ff8b832"
 USERNAME = "Project-temporary-user"
 REPOSITORY_NAME = 'watching-repository'
 
 if __name__ == '__main__':
     tests_to_launch = [1, 4, 6, 7, 10, 22, 32, 33, 51]
-    spammer_file = 'commits_spammer.sh'
+    spammer_file = "commits_spammer.sh"
     token = GITHUB_TOKEN
     username = USERNAME
     controlled_repository = REPOSITORY_NAME
@@ -29,8 +27,9 @@ if __name__ == '__main__':
     time_to_wait_for_commits = 30
     delay = 5
 
-    spammer = Popen([spammer_file, token, username, controlled_repository, commit_number], shell = True,
-              stdin = None, stdout = None, stderr = None, close_fds = True)
+    spammer = Popen(
+        "./" + spammer_file + " " + token + " " + username + " " + controlled_repository + " " + commit_number,
+        shell=True, stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
     print("INFO: Started commits generator")
 
     print("INFO: Creating github session...")
@@ -45,7 +44,7 @@ if __name__ == '__main__':
                                                                 REPOSITORY_NAME,
                                                                 GITHUB_TOKEN)
         if is_newer_commit(commits_date):
-            print("INFO: Detected new changes. Launching tests.")
+            print("INFO: Detected new changes. Starting tests.")
             launch_tests(tests_to_launch)
             print("INFO: Finished tests")
         else:
@@ -53,5 +52,13 @@ if __name__ == '__main__':
             timer += delay
     print("INFO: Finished waiting for new changes on github")
     spammer.terminate()
-    output = check_output(["python3", "report_manager.py"])
-    print(output)
+    print("INFO: Generating report for tests results. Open following URL to get report:")
+    for python_version in ["python3", "python"]:
+        try:
+            output = check_output([python_version, "report_manager.py"])
+            print(output)
+            break
+        except CalledProcessError as e:
+            print(e)
+
+

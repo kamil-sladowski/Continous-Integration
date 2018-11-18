@@ -55,6 +55,6 @@ def is_newer_commit(all_commit_dates) -> bool:
                 f.write(last_commit_date + '\n')
             return True
         except IndexError:
-            print("There hasn't been any commits since ", last_commit_date)
+            print("There hasn't been any commits since: ", last_commit_date)
             # print("WARNING: There hasn't been any commits since ", last_commit_date)
         return False
