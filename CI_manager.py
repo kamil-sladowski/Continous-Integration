@@ -53,5 +53,5 @@ if __name__ == '__main__':
             timer += delay
     print("INFO: Finished waiting for new changes on github")
     spammer.terminate()
-    output = check_output(["python", "report_manager.py"])
+    output = check_output(["python3", "report_manager.py"])
     print(output)
