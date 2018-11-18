@@ -21,6 +21,8 @@ import os.path
 import time
 from random import randint, choice
 
+from github import get_get_dates_of_all_commits_from_github, is_newer_commit
+
 SUITE_TESTS_DIR_PREFIX = 'tests_suite'
 ROOT_TESTS_DIR = 'all_tests'
 
@@ -105,3 +107,23 @@ def launch_tests(tests_to_launch):
         test_result = launch_single_test(id)
         test_result.log_file_dir = single_test_dir
         update_report_file(file_name, test_result)
+
+
+def monitor_changes(github_token, github_session, time_to_wait_for_changes,
+                    username, repository_name, tests_to_launch, time_delay):
+    timer = 0
+    while time_to_wait_for_changes > timer:
+        print("INFO: Checking if there was introduced new changes on github...")
+        commits_date = get_get_dates_of_all_commits_from_github(github_session,
+                                                                username,
+                                                                repository_name,
+                                                                github_token)
+        if is_newer_commit(commits_date):
+            print("INFO: Detected new changes. Starting tests.")
+            launch_tests(tests_to_launch)
+            print("INFO: Finished tests")
+        else:
+            print("INFO: No changes")
+            time.sleep(time_delay)
+            timer += time_delay
+    print("INFO: End of waiting for new changes on github")

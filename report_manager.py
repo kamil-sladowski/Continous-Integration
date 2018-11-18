@@ -16,13 +16,6 @@ Dla każdego testu o danym id tworzy listę, zawierającej historię <REZULTAT> 
 Dane te umieszcza w obiektach klasy ProcessedReport.
 Z nich generuje raport w formacie html, używając do tego modułu flask.
 
-Wymagane narzędzia:
--Python3
-
--Flask
-    instalacja:
-    pip3 install Flask
-
 """
 
 import os
@@ -138,5 +131,8 @@ def index():
     return render_template('report.html', tests=processed_rep, passed_tests_num=passed_tests_num(processed_rep))
 
 
-if __name__ == '__main__':
-    app.run(host=HOST, port=PORT, debug=True)
+def generate_report():
+    print("INFO: Generating report for tests results. Open following URL to get report:")
+    app.run(host=HOST, port=PORT)
+
+

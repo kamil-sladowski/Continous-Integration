@@ -1,64 +1,70 @@
 """
-This project is a simulator, which trigger launching tests, when detects new changes on github repository.
-After that, it takes results from those and previous 5 last runned test suites and generates report in html.
+This project is a simulator of Continuous Integration process.
+Script trigger (faked) tests suite, when detects new changes on github repository.
+Results are saved on disc, to .txt files.
+After tests, results are being collected from this and previous 5 last tests suites.
+Statistics from collected data are processed and located to html report.
+You will need internet browser to open .html summary.
 
-Every suite of tests generates on the end the .txt files with summary with single results.
-(The tests are faked and results generated randomly - The goal of project was to implement only flow - how detect
-changes and, collect final report and present in a readable way).
+(The tests are faked and results generated randomly - The goal of project was to implement only flow - how to detect
+changes, collect final report and present in a readable way).
+
+Requirements:
+- Python3
+- Flask
+- requests
+
+    Installation:
+    pip3 install -r requirements.txt
+
 """
 
-from time import sleep
-from subprocess import Popen, check_output, PIPE, STDOUT, DEVNULL, CalledProcessError
+from subprocess import Popen, PIPE, STDOUT, DEVNULL
 from github import *
+from report_manager import generate_report
 from tests_suite_manager import *
+import argparse
+from threading import Thread
 
-GITHUB_TOKEN = "2100b65daef23d45f719550b653c1c067ff8b832"
 USERNAME = "Project-temporary-user"
 REPOSITORY_NAME = 'watching-repository'
+TESTS_TO_LAUNCH = [1, 4, 6, 7, 10, 22, 32, 33, 51]
+SPAMMER_FILE = "commits_spammer.sh"
+TIME_DELAY = 5
+
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    parser.add_argument('-t', '--token',
+                        help='Provide token from mail, to allow access to github repository',
+                        type=str, required=True)
+    parser.add_argument('-c', '--commit_number',
+                        help='How many commits push to repository. The more they are, the longer the program will be working',
+                        type=int, default=2)
+    parser.parse_args()
+    return parser.parse_args()
+
+
+def run_commits_generator(github_token, commit_number):
+    spammer = Popen(
+        "./" + SPAMMER_FILE + " " + github_token + " " + USERNAME + " " + REPOSITORY_NAME + " " + commit_number,
+        shell=True, stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
+    print("INFO: Commits generator started pushing new changes to github")
+    return spammer
+
 
 if __name__ == '__main__':
-    tests_to_launch = [1, 4, 6, 7, 10, 22, 32, 33, 51]
-    spammer_file = "commits_spammer.sh"
-    token = GITHUB_TOKEN
-    username = USERNAME
-    controlled_repository = REPOSITORY_NAME
-    commit_number = '2'
+    args = get_arguments()
+    github_token = args.token
+    commit_number = args.commit_number
+    time_to_wait_for_changes = commit_number*TIME_DELAY + 5
 
-    time_to_wait_for_commits = 30
-    delay = 5
+    spammer = run_commits_generator(github_token, str(commit_number))
+    github_session = create_github_session(github_token)
+    monitor_changes(github_token, github_session, time_to_wait_for_changes,
+                    USERNAME, REPOSITORY_NAME, TESTS_TO_LAUNCH, TIME_DELAY)
 
-    spammer = Popen(
-        "./" + spammer_file + " " + token + " " + username + " " + controlled_repository + " " + commit_number,
-        shell=True, stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
-    print("INFO: Started commits generator")
-
-    print("INFO: Creating github session...")
-    github_session = create_github_session(GITHUB_TOKEN)
-    print("INFO: Created github session")
-
-    timer = 0
-    while time_to_wait_for_commits > timer:
-        print("INFO: Checking if were introduced new changes on github...")
-        commits_date = get_get_dates_of_all_commits_from_github(github_session,
-                                                                USERNAME,
-                                                                REPOSITORY_NAME,
-                                                                GITHUB_TOKEN)
-        if is_newer_commit(commits_date):
-            print("INFO: Detected new changes. Starting tests.")
-            launch_tests(tests_to_launch)
-            print("INFO: Finished tests")
-        else:
-            sleep(delay)
-            timer += delay
-    print("INFO: Finished waiting for new changes on github")
     spammer.terminate()
-    print("INFO: Generating report for tests results. Open following URL to get report:")
-    for python_version in ["python3", "python"]:
-        try:
-            output = check_output([python_version, "report_manager.py"])
-            print(output)
-            break
-        except CalledProcessError as e:
-            print(e)
-
-
+    generate_report()

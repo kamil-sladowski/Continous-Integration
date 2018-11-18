@@ -22,10 +22,11 @@ def format_date(commit_date):
 
 
 def create_github_session(token):
-
+    print("INFO: Creating github session...")
     s = requests.Session()
     g = s.get('https://api.github.com/user', headers={"Authorization": "token " + token})
     if '200' in g.headers['Status']:
+        print("INFO: Created github session")
         return s
     else:
         raise GitConnectionError
@@ -55,6 +56,5 @@ def is_newer_commit(all_commit_dates) -> bool:
                 f.write(last_commit_date + '\n')
             return True
         except IndexError:
-            print("There hasn't been any commits since: ", last_commit_date)
-            # print("WARNING: There hasn't been any commits since ", last_commit_date)
+            print("INFO: No commits since: ", last_commit_date)
         return False
