@@ -25,9 +25,11 @@ Wymagane narzędzia:
 
 """
 
-from flask import Flask, redirect, render_template
+import os
+from flask import Flask, render_template
 from socket import *
 from tests_suite_manager import TestResult
+
 
 HOST = '127.0.0.1'
 PORT = 5000
@@ -42,9 +44,7 @@ app.debug = True
 
 
 class ProcessedReport:
-    """
-    Zawiera wszystkie staystyki wszystkich prob danego testu
-    """
+
     def __init__(self, id, passes, times):
         passed_num = passes.count('True')
         self.id = str(id)
@@ -73,19 +73,12 @@ class ProcessedReport:
 
 
 def get_current_dir():
-    """Zwraca sciezke do katalogu w ktorym znajduje sie wywolywany skrypt"""
 
     curr_dir = os.path.join(os.path.dirname(os.getcwd()), ROOT_TESTS_DIR)
     return curr_dir
 
 
 def collect_report_files(curr_dir: str) -> list:
-    """
-    Funkcja przeszukuje katalogi od curr_dir w głąb, zbierajac pliki tekstowe
-
-    :param curr_dir: Bierzacy katalog
-    :return: Lista plikow tekstowych
-    """
 
     report_files = []
     for root, dirs, files in os.walk(curr_dir):
@@ -96,13 +89,6 @@ def collect_report_files(curr_dir: str) -> list:
 
 
 def get_report_details(report_files: list) -> TestResult:
-    """
-    Z kazdego pliku tekstowego report_files wybiera dane o rezultacie danego testu
-
-    :param report_files:
-    :return: Lista obiektow klasy TestResult,
-    w ktorej kazdy obiekt zawiera informacje o konkretnej probie uruchomienia danego testu
-    """
 
     report_obj = []
     for file in report_files:
@@ -115,10 +101,7 @@ def get_report_details(report_files: list) -> TestResult:
 
 
 def passed_tests_num(processed_rep: list) -> int:
-    """
-    :param processed_rep:
-    :return: Liczba udanych testow
-    """
+
     k = 0
     for i in processed_rep:
         if i.current_result == 'True':
@@ -127,16 +110,7 @@ def passed_tests_num(processed_rep: list) -> int:
 
 
 def process_reports_data(report_details: list) -> list:
-    """
-    Przetwarza dane o testach.
-    Report_details zawiera wielokrotnie dane o tych samych testach,
-    tyko uruchomionych w roznych probach.
-    Funkcja ta filtruje report_details wzgledem numeru danego testu.
-    Dla kazdego id testu zwraca obiekt zawierajacy listy kolejnych czasow i powodzen.
 
-    :param report_details:
-    :return: processed_report
-    """
     passes = []
     times = []
     processed_report = []
@@ -156,8 +130,7 @@ def process_reports_data(report_details: list) -> list:
 
 @app.route('/')
 def index():
-    """ otworzenie strony startowej html.
-    W tym projekcie nastepje automatyczne przekierowanie na podstrone /report/"""
+
     curr_dir = get_current_dir()
     report_files = collect_report_files(curr_dir)
     report_details = sorted(get_report_details(report_files), key=lambda obj: int(obj.id))

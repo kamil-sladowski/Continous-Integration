@@ -1,10 +1,20 @@
 
+"""
+This project is a simulator, which trigger launching tests, when detects new changes on github repository.
+After that, it takes results from those and previous 5 last runned test suites and generates report in html.
+
+Every suite of tests generates on the end the .txt files with summary with single results.
+(The tests are faked and results generated randomly - The goal of project was to implement only flow - how detect
+changes and, collect final report and present in a readable way).
+"""
+
+
 from time import sleep
 from subprocess import Popen, check_output
 from github import *
 from tests_suite_manager import *
 
-GITHUB_TOKEN = "3adc83a410980934edab146140778690927ad762"
+GITHUB_TOKEN = "bc97f583fd2f18d81ddbacd5eadd6b8e7fa5b693"
 USERNAME = "Project-temporary-user"
 REPOSITORY_NAME = 'watching-repository'
 
