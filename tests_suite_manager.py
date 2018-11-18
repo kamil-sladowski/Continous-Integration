@@ -26,7 +26,6 @@ SUITE_TESTS_DIR_PREFIX = 'tests_suite'
 ROOT_TESTS_DIR = 'all_tests'
 
 class TestResult:
-    """Przechowuje dane o rezultacie pojedynczego testu"""
 
     def __init__(self, id, is_passed, time_spend, log_file_dir='/'):
         self.id = str(id)
@@ -45,19 +44,12 @@ class TestResult:
 
 
 def get_current_date():
-    """ Pobiera aktuala date systemową, uzywana do nazywania katalogow"""
 
     current_date = time.strftime("%D_%H_%M")
     return current_date.replace('/', '_')
 
 def create_dir(dirname, name):
-    """
-    Tworzy katalog 'name ' w danym 'dirname'
 
-    :param diname:
-    :param name:
-    :return new_dir:
-    """
     print("dirname " + dirname)
     print("name " + name)
     new_dir = os.path.join(dirname, name)
@@ -68,38 +60,16 @@ def create_dir(dirname, name):
     return new_dir
 
 def create_suite_tests_dir(dirname, date):
-    """
-    Tworzy glowny folder przechowywujacy rezultaty wszystkich testow uruchomionych w danej suicie
-
-    :param dirname:
-    :param date: Aktualna data systemowa:
-    :return dirname: Polozenie folderu do umieszczania w nim danych o puli uruchomionych testow.
-    """
 
     name = SUITE_TESTS_DIR_PREFIX + "__" + date
     return create_dir(dirname, name)
 
 def create_single_test_dir(dirname, id, name):
-    """
-    Tworzy katalog dla logow z danego testu. Urzytkownik dostaje w raporcie nazwe tego katalogu
-
-    :param dirname:
-    :param id:
-    :param name:
-    :return: dirname:
-    """
 
     name = 'test_' + id + '_runned_at_' + name
     return create_dir(dirname, name)
 
 def create_single_test_log_file(dirname, date):
-    """
-    Tworzy plik tekstowy raportujacy infomacje o powodzeniu danego testu
-
-    :param dirname:
-    :param date:
-    :return: new_file_name:
-    """
 
     new_file_name = os.path.join(dirname, str('test_' + date + '.txt'))
     with open(new_file_name, 'w') as f:
@@ -107,25 +77,12 @@ def create_single_test_log_file(dirname, date):
     return new_file_name
 
 def update_report_file(file_name, test_result):
-    """
-    Aktualizuje plik z raportem o dane z kolejnego zakonczonego testu
-
-    :param file_name - nazwa pliku tekstowego, zawierajaca dane o rezultatach danego zestawu testów:
-    :param test_resulty -> str; zawiera <id, rezultat, czas, katalog> pojedynczego testu:
-    """
 
     with open(file_name, 'a') as f:
         s2 = test_result + '\n'
         f.writelines(s2)
 
 def launch_single_test(id):
-    """
-    Symuluje uruchomienie testu o danym 'id'.
-    Zwraca zasymulowana informacje o powodzeniu danego testu.
-
-    :param id - Numer testu:
-    :return: Obiekt zawierajacy dane o powodzeniu pojedynczego testu.
-    """
 
     print("Info: Running test: " + id)
     dir = '//'
@@ -137,16 +94,11 @@ def launch_single_test(id):
     return TestResult(id, str(is_passed), time_spend, dir)
 
 def launch_tests(tests_to_launch):
-    """
-    Uruchamia nowy zestaw testow.
-
-    :param tests_to_launch: lista testow do uruchomienia
-    """
 
     current_date = get_current_date()
     curr_dir = os.path.dirname(os.getcwd())
     curr_dir = os.path.join(curr_dir, "Continous-Integration")
-    all_tests = os.path.join(curr_dir, ROOT_TESTS_DIR) # curr_dir - powinno sie uruchamiac z ContinousIntegration
+    all_tests = os.path.join(curr_dir, ROOT_TESTS_DIR)
     suite_test_dir = create_suite_tests_dir(all_tests, current_date)
     print("INFO: Log files available in: ", suite_test_dir)
     file_name = create_single_test_log_file(suite_test_dir, current_date)

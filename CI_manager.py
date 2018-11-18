@@ -14,7 +14,7 @@ from subprocess import Popen, check_output
 from github import *
 from tests_suite_manager import *
 
-GITHUB_TOKEN = "bc97f583fd2f18d81ddbacd5eadd6b8e7fa5b693"
+GITHUB_TOKEN = "72484bd0f0e68842e29925015e6aa031ca3dbdb6"
 USERNAME = "Project-temporary-user"
 REPOSITORY_NAME = 'watching-repository'
 
