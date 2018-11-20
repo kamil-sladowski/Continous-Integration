@@ -15,6 +15,7 @@ Requirements:
 - requests
 
     Installation:
+    apt-get install python3-pip
     pip3 install --upgrade -r requirements.txt
 
 """

@@ -32,10 +32,6 @@ SUITE_TESTS_DIR_PREFIX = 'tests_suite'
 REPORT_HEADER = 'TEST'
 
 
-app = Flask(__name__)
-app.debug = True
-
-
 class ProcessedReport:
 
     def __init__(self, id, passes, times):
@@ -121,18 +117,20 @@ def process_reports_data(report_details: list) -> list:
     return processed_report
 
 
-@app.route('/')
-def index():
-
-    curr_dir = get_current_dir()
-    report_files = collect_report_files(curr_dir)
-    report_details = sorted(get_report_details(report_files), key=lambda obj: int(obj.id))
-    processed_rep = process_reports_data(report_details)
-    return render_template('report.html', tests=processed_rep, passed_tests_num=passed_tests_num(processed_rep))
 
 
 def generate_report():
     print("INFO: Generating report for tests results. Open following URL to get report:")
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        curr_dir = get_current_dir()
+        report_files = collect_report_files(curr_dir)
+        report_details = sorted(get_report_details(report_files), key=lambda obj: int(obj.id))
+        processed_rep = process_reports_data(report_details)
+        return render_template('report.html', tests=processed_rep, passed_tests_num=passed_tests_num(processed_rep))
+
     app.run(host=HOST, port=PORT)
 
 
