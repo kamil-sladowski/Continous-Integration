@@ -44,6 +44,9 @@ def get_get_dates_of_all_commits_from_github(session, username, repository, toke
 
 def is_newer_commit(history_file, all_commit_dates) -> bool:
     history_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), history_file)
+    if not os.path.exists(history_file):
+        with open(history_file, 'w') as f:
+            f.write("2000-01-01T00:00:00Z\n")
 
     with open(history_file, 'r') as f:
         last_commit_date = f.readline()

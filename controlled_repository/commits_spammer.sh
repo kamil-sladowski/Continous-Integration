@@ -25,6 +25,7 @@ if ! [ -d ${controlled_repository} ]; then
 fi
 
 cd "$controlled_repository"
+sleep 1
 for i in `seq $commit_number`; do
     echo `date '+%Y%m%d%H%M%S'` > README.md
     git add README.md
