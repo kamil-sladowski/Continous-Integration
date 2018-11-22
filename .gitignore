@@ -1,1 +1,2 @@
+controlled_repository/*
 !controlled_repository/commits_spammer.sh
