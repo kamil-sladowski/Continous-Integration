@@ -24,8 +24,6 @@ if ! [ -d ${controlled_repository} ]; then
     cd -
 fi
 
-echo `pwd`
-
 cd "$controlled_repository"
 for i in `seq $commit_number`; do
     echo `date '+%Y%m%d%H%M%S'` > README.md

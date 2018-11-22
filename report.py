@@ -26,7 +26,7 @@ from tests_suite import TestResult
 HOST = '127.0.0.1'
 PORT = 5000
 
-SUITE_TESTS_DIR_PREFIX = 'tests_suite'
+TESTS_DIR = 'all_tests'
 REPORT_HEADER = 'TEST'
 
 
@@ -62,7 +62,7 @@ class ProcessedReport:
 def collect_report_files() -> list:
     current_dir = os.path.dirname(os.path.realpath(__file__))
     report_files = []
-    for root, dirs, files in os.walk(current_dir):
+    for root, dirs, files in os.walk(os.path.join(current_dir, TESTS_DIR)):
         for f in files:
             if '.txt' in f:
                 report_files.append(os.path.join(root, f))
@@ -77,6 +77,7 @@ def get_report_details(report_files: list) -> TestResult:
             for line in f:
                 line = line.split()
                 if line[0] != REPORT_HEADER:
+                    print(TestResult(*line))
                     report_obj.append(TestResult(*line))
     return report_obj
 
@@ -114,6 +115,7 @@ def process_reports_data(report_details: list) -> list:
 def generate_report():
     print("INFO: Generating report for tests results. Open following URL to get report:")
     app = Flask(__name__)
+    # app.debug =True
 
     @app.route('/')
     def index():
