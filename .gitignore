@@ -1,2 +1,5 @@
 controlled_repository/*
 !controlled_repository/commits_spammer.sh
+commits_history.txt
+__pycache__
+all_tests/*
